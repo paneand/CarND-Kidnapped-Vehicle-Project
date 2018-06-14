@@ -14,17 +14,41 @@
 #include <sstream>
 #include <string>
 #include <iterator>
-
 #include "particle_filter.h"
 
 using namespace std;
 
 void ParticleFilter::init(double x, double y, double theta, double std[]) {
+	default_random_engine gen;
 	// TODO: Set the number of particles. Initialize all particles to first position (based on estimates of 
+	num_particles = 1000;			
 	//   x, y, theta and their uncertainties from GPS) and all weights to 1. 
 	// Add random Gaussian noise to each particle.
 	// NOTE: Consult particle_filter.h for more information about this method (and others in this file).
+	// TODO: Set standard deviations for x, y, and theta
+	double std_x = std[0];
+	double std_y = std[1];
+	double std_theta = std[2];
+	 
 
+	// This line creates a normal (Gaussian) distribution for x,y and theta
+	normal_distribution<double> dist_x(x, std_x);
+	normal_distribution<double> dist_y(y, std_y);
+	normal_distribution<double> dist_theta(theta, std_theta);
+
+	
+	for (int i = 0; i < num_particles; ++i) {
+		double sample_x, sample_y, sample_theta;
+		 sample_x = dist_x(gen);
+		 sample_y = dist_y(gen);
+		 sample_theta = dist_theta(gen);
+		 Particle particle = {};
+		 particle.x=sample_x;
+		 particle.y=sample_y;
+		 particle.theta=sample_theta;
+		 particle.weight=1;
+		 particles.push_back(particle);
+	}
 }
 
 void ParticleFilter::prediction(double delta_t, double std_pos[], double velocity, double yaw_rate) {
