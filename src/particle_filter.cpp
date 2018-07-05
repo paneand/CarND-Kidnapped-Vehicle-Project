@@ -236,11 +236,10 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		totalWeights+=currentWeight;
 	}
 
-	// Weight normalization
-	for (itPart = particles.begin(); itPart != particles.end(); ++itPart){
-		Particle curPar = *itPart;
-		curPar.weight=curPar.weight/totalWeights;
-		currentWeightsArray.push_back(curPar.weight);
+	// Weight normalization and weights vector update
+	for (int i = 0; i < num_particles; ++i){
+		particles[i].weight=particles[i].weight/totalWeights;
+		weights[i]=particles[i].weight;
 	}
 
 }
